@@ -50,52 +50,56 @@ Enter a word to score: `);
 
 };
 
-
-let simpleScore = {
-  name: "Simple Score",
-  description: "Each letter is worth 1 point.",
-  scoringFunction: function (word) {
-    return word.length;
-  }
+// individual scoring algorithms (apparently must be functions?)
+function simpleScore(word) {
+  return String(word).length;
 };
 
-let vowelBonusScore = {
-  name: "Bonus Vowels",
-  description: "Vowels are 3 pts, consonants are 1 pt.",
-  scoringFunction: function (word) {
-    word = word.toUpperCase();
-    let letterPoints = 0;
-    for (let i = 0; i < word.length; i++) {
-      for (const pointValue in vowelPointStructure) {
-        if (vowelPointStructure[pointValue].includes(word[i])) {
-          letterPoints += Number(pointValue);
-        } else {
-          letterPoints += 1;
-        }
-      }
-    }  
-    return Number(letterPoints);
-  }
-};
-
-let scrabbleScore = {
-  name: "Scrabble",
-  descriptions: "The traditional scoring algorithm.",
-  scoringFunction: function (word) {
-    word = word.toLowerCase();
-    let letterPoints = 0;
-    for (let i = 0; i < word.length; i++) {
-      for (const letter in newPointStructure) {
-      if (letter === word[i]) {
-        letterPoints += Number(newPointStructure[letter]);
-        }
+function vowelBonusScore(word) {
+  word = String(word).toUpperCase();
+  let letterPoints = 0;
+  for (let i = 0; i < word.length; i++) {
+    for (const pointValue in vowelPointStructure) {
+      if (vowelPointStructure[pointValue].includes(word[i])) {
+        letterPoints += Number(pointValue);
+      } else {
+        letterPoints += 1;
       }
     }
-    return Number(letterPoints);
-  }
+  }  
+  return Number(letterPoints);
 };
 
-let scoringAlgorithms = [simpleScore, vowelBonusScore, scrabbleScore];
+function scrabbleScore(word) {
+  word = String(word).toLowerCase();
+  let letterPoints = 0;
+  for (let i = 0; i < word.length; i++) {
+    for (const letter in newPointStructure) {
+    if (letter === word[i]) {
+      letterPoints += Number(newPointStructure[letter]);
+      }
+    }
+  }
+  return Number(letterPoints);
+};
+
+let scoringAlgorithms = [
+  {
+  name: "Simple Score",
+  description: "Each letter is worth 1 point.",
+  scoringFunction: simpleScore
+  },
+  {
+  name: "Bonus Vowels",
+  description: "Vowels are 3 pts, consonants are 1 pt.",
+  scoringFunction: vowelBonusScore
+  },
+  {
+  name: "Scrabble",
+  descriptions: "The traditional scoring algorithm.",
+  scoringFunction: scrabbleScore
+  }
+];
 
 
 function scorerPrompt(num) {
